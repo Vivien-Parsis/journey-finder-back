@@ -1,0 +1,19 @@
+{
+  "name": "journey-finder-back",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "npx nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fastify/cors": "^9.0.1",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.26.2",
+    "mongoose": "^8.3.3"
+  }
+}
