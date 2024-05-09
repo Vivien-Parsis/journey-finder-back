@@ -6,10 +6,10 @@ mongoose.connect(db_url)
         .catch((err) => console.error('Erreur lors de la connexion à MongoDB :', err));
 
 const userlist = mongoose.model('userlist',{
-    nom: { type: String, required: true },
-    prenom: { type: String, required: true },
+    lastName: { type: String, required: true },
+    firstName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    photo: String,
-    motDePasse: { type: String, required: true }
+    password: { type: String, required: true }
 })
+
 module.exports = { userlist }
