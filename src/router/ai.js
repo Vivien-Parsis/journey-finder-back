@@ -6,14 +6,17 @@ const AIClient = new openai.OpenAI({
 })
 module.exports = (fastify, _, done) => {
     fastify.get("/", (req, res) => {
+        const input = req.query.city ? req.query.city : "Paris"
         AIClient.chat.completions.create({  
-            messages: [
+            messages : 
+            [
                 {
 					"role": "system",
-					"content": "You will be provided with a product description and seed words, and your task is to generate product names. Answer in JSON valid format like '[{name:\"generate name\"},{name:\"generate name\"}]'"
+					"content": "You will be provided with a city, and your task is to generate trip from this city."
+                    +"Answer in JSON valid format like '[{\"place\":\"monument or place\", \"description\":\"description\",\"what_to_do\":\"...\"},{\"place\":\"monument or place\", \"description\":\"description\",\"what_to_do\":\"...\"},...]'"
               	},{
                 	"role": "user",
-                	"content": "Product description: A home milkshake maker\nSeed words: fast, healthy, compact."
+                	"content": `city: ${input}`
               	}
             ],
             model:"google/gemma-2b-it",
