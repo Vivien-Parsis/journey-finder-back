@@ -22,7 +22,7 @@ API en fastify pour gerer le back end de journey finder
 ### Via docker
 
 - cloner le dépot : `git clone https://github.com/Vivien-Parsis/journey-finder-back`
-- build : `docker run --rm -p 4000:4000 --name journey-finder-back journey-finder-back`
+- build : `docker build -t journey-finder-back .`
 - lancer l'image : `docker run --rm -p 4000:4000 --name journey-finder-back journey-finder-back`
 
 ## Adresse
