@@ -1,46 +1,72 @@
 const openai = require("openai")
 const { apiKeyTogether } = require("../const/config")
 const { tripClientModel, clientModel } = require("../config/db")
+const { cleanJsonAiOutput } = require("../controller/clean")
 
 const AIClient = new openai.OpenAI({
     apiKey: apiKeyTogether,
     baseURL: 'https://api.together.xyz/v1',
 })
 module.exports = (fastify, _, done) => {
-    fastify.get("/trip", (req, res) => {
-        const input = req.query.city ? req.query.city : "Paris"
-        const ClientId = req.query.clientid ? req.query.clientid : null
-        if(!ClientId){
+    fastify.post("/trip", (req, res) => {
+        const user = {
+            clientId : req.body.clientid ? req.body.clientid : null,
+            preference : req.body.preference ? req.body.preference : "museum, cold temperature"
+        }
+
+        if(!user.clientId){
             return res.send({message:"missing clientid"})
         }
-        clientModel.findOne({ _id: ClientId }).then(data => {
+        clientModel.findOne({ _id: user.clientId }).then(data => {
             if (!data) {    
                 return res.send({ message : "user not found" })
             }
             AIClient.chat.completions.create({  
-                messages : 
+                messages :
                 [
                     {
                         "role": "system",
-                        "content": "You will be provided with a city, and your task is to generate trip from this city."
-                        +"Answer in JSON valid format like '[{\"place\":\"monument or place\", \"description\":\"description\",\"what_to_do\":\"...\"},{\"place\":\"monument or place\", \"description\":\"description\",\"what_to_do\":\"...\"},...]'"
+                        "content": "You will be provided with by user preference."
+                        +"Your task is to generate trip from user preferences."
+                        +"Generate multiple place at least 5."
+                        +"format your answer in JSON valid format like :"
+                        +"[{"
+                        +"\"description\": \"insert trip description...\","
+                        +"\"location\":\"insert city plus the country\","
+                        +"\"places\": ["
+                            +"{"
+                                +"\"place\": \"insert name of place...\","
+                                +"\"description\": \"insert description of place...\","
+                                +"\"what_to_do\": \"insert what to do of place...\""
+                            +"},{"
+                                +"\"place\": \"insert name of place...\","
+                                +"\"description\": \"insert description of place...\","
+                                +"\"what_to_do\": \"insert what to do of place...\""
+                            +"},...]}]"
+                        
                     },{
                         "role": "user",
-                        "content": `city: ${input}`
-                      }
+                        "content": `user preference:${user.preference}`
+                    }
                 ],
-                model:"google/gemma-2b-it",
+                model:"google/gemma-7b-it",
                 n:1
             }).then(data => {
                 if(data.choices[0].message){
-                    const answer = JSON.parse(data.choices[0].message.content.replaceAll("```","").trim())
-                    req.log.ai("success")
-                    req.log.ai(`prompt tokens:${data.usage.prompt_tokens} | completion tokens:${data.usage.completion_tokens} | total tokens:${data.usage.total_tokens}`);
-                    tripClientModel.insertMany([{client:ClientId, trip:answer}]).then(()=>{
-                        req.log.db("inserted successfully trip to database")
-                        res.type('application/json')
-                        return res.send(answer)
-                    })
+                    console.log(data.choices[0].message.content)
+                    try{
+                        const answer = JSON.parse(cleanJsonAiOutput(data.choices[0].message.content))
+                        req.log.ai("success")
+                        req.log.ai(`prompt tokens:${data.usage.prompt_tokens} | completion tokens:${data.usage.completion_tokens} | total tokens:${data.usage.total_tokens}`);
+                        tripClientModel.insertMany([{client:user.clientId, trip:answer}]).then(()=>{
+                            req.log.db("inserted successfully trip to database")
+                            res.type('application/json')
+                            return res.send(answer)
+                        })
+                    }catch(err){
+                        console.log(err)
+                        return res.send({message:"AI json error"})
+                    } 
                 }else{
                     return res.send({message:"error on AI API Call"})
                 }
