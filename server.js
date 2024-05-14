@@ -1,9 +1,25 @@
-const fastify = require('fastify')({logger: true})
 const dotenv = require("dotenv")
 const { host, port } = require("./src/const/config")
 
-dotenv.config()
+const fastify = require('fastify')({
+    logger: {
+        transport: {
+            target: "@fastify/one-line-logger", 
+            colors: {
+                31: "yellow",
+                32: "magenta"
+            },
+            options: {
+                colorize: true,
+            }
+        },
+        customLevels: {
+            db: 31,
+            ai: 32,
+        },
+    }})
 
+dotenv.config()
 fastify.register(require("@fastify/cors"), { 
     origin:"*"
 })
@@ -21,5 +37,4 @@ fastify.register(require("./src/router/ai"), { prefix : "/ai" })
 
 fastify.listen({host: host, port: port }, (err, address) => {
     if (err) throw err
-    console.log(`listening to ${address}`)
 })

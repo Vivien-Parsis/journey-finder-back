@@ -1,5 +1,5 @@
 const crypto = require("node:crypto")
-const { userlist } = require("../config/db")
+const { clientModel, tripClientModel } = require("../config/db")
 const { default: mongoose } = require("mongoose")
 const { isValidEmail } = require("../controller/validator")
 
@@ -9,7 +9,7 @@ module.exports = (fastify, _, done) => {
         if(!mongoose.isValidObjectId(id) && id.trim()!=""){
             return res.send({message:"invalid id format"})
         }
-        userlist.find(id ? {_id:id} : {}).then(data => {
+        clientModel.find(id ? {_id:id} : {}).then(data => {
                 return res.send(data)
             }
         )
@@ -28,9 +28,9 @@ module.exports = (fastify, _, done) => {
         if(!isValidEmail(currentUser.email)){
             return res.send({message:"invalid email format"})
         }
-        userlist.find({ email: currentUser.email }).then(users => {
+        clientModel.find({ email: currentUser.email }).then(users => {
             if (users.length == 0) {
-                userlist.insertMany([currentUser]).then(data => {
+                clientModel.insertMany([currentUser]).then(data => {
                         return res.send(data)
                     }
                 )
@@ -48,7 +48,7 @@ module.exports = (fastify, _, done) => {
         if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
             return res.send({ message : "incorrect format user" })
         }
-        userlist.findOne({ email: currentUser.email, motDePasse: currentUser.password }).then(data => {
+        clientModel.findOne({ email: currentUser.email, motDePasse: currentUser.password }).then(data => {
             if (!data) {    
                 return res.send({ message : "user not found" })
             }
@@ -64,11 +64,11 @@ module.exports = (fastify, _, done) => {
         if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
             return res.send({ message: "incorrect format user" })
         }
-        userlist.find({email:currentUser.email,password:currentUser.password}).then(data => {
+        clientModel.find({email:currentUser.email,password:currentUser.password}).then(data => {
             if(data.length==0){
                 return res.send({ message : "user not found" })
             }
-            userlist.deleteOne({email:currentUser.email,password:currentUser.password}).then(data => {
+            clientModel.deleteOne({email:currentUser.email,password:currentUser.password}).then(data => {
                 return res.send({ message : "user deleted" })
             })
         })
@@ -78,6 +78,28 @@ module.exports = (fastify, _, done) => {
     fastify.post("/forgetpswd", (req, res) => {
         const body = req.body
         res.send("/forgetpswd")
+    })
+
+    fastify.post("/trip", (req, res)=> {
+        const currentUser = {
+            email: req.body.email ? req.body.email : "",
+            password: req.body.password ? crypto.createHash('sha256').update(req.body.password).digest("base64") : ""
+        }
+        if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
+            return res.send({ message: "incorrect format user" })
+        }
+        clientModel.find({email:currentUser.email,password:currentUser.password}).then(data => {
+            if(data.length==0){
+                return res.send({ message : "user not found" })
+            }
+            console.log(data[0].id)
+            tripClientModel.find({client:data[0].id}).then(trip => {
+                if(trip.length==0){
+                    return res.send({ message : "no trip found" })
+                }
+                return res.send(trip)
+            })
+        })
     })
 
     done()
