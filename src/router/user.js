@@ -1,105 +1,28 @@
-const crypto = require("node:crypto")
-const { clientModel, tripClientModel } = require("../config/db")
-const { default: mongoose } = require("mongoose")
-const { isValidEmail } = require("../controller/validator")
+const { getUser, signUp, signIn, deleteUser, forgetPassword, getUserTrip } = require("../controller/user")
 
 module.exports = (fastify, _, done) => {
-    fastify.get("/:id?", (req, res)=>{
-        const id = req.params.id ? req.params.id : ""
-        if(!mongoose.isValidObjectId(id) && id.trim()!=""){
-            return res.send({message:"invalid id format"})
-        }
-        clientModel.find(id ? {_id:id} : {}).then(data => {
-                return res.send(data)
-            }
-        )
+    // fastify.get("/get/:id?", (req, res)=>{
+    //     getUser(req, res)
+    // })
+
+    fastify.post("/sign-up", (req, res) => {
+        signUp(req, res)
     })
 
-    fastify.post("/signup", (req, res) => {
-        const currentUser = {
-            firstName : req.body.firstName ? req.body.firstName : "",
-            lastName : req.body.lastName ? req.body.lastName : "",
-            email : req.body.email ? req.body.email : "",
-            password : req.body.password ? crypto.createHash('sha256').update(req.body.password).digest("base64") : ""
-        }
-        if (currentUser.email.trim() == "" || currentUser.password.trim() == "" || currentUser.firstName.trim() == "" || currentUser.lastName.trim() == "") {
-            return res.send({ message: "incorrect format user" })
-        }
-        if(!isValidEmail(currentUser.email)){
-            return res.send({message:"invalid email format"})
-        }
-        clientModel.find({ email: currentUser.email }).then(users => {
-            if (users.length == 0) {
-                clientModel.insertMany([currentUser]).then(data => {
-                        return res.send(data)
-                    }
-                )
-            } else {
-                return res.send({ message : "already exist" })
-            }
-        })
+    fastify.post("/sign-in", (req, res) => {
+        signIn(req, res)
     })
 
-    fastify.post("/signin", (req, res) => {
-        const currentUser = {
-            email: req.body.email ? req.body.email : "",
-            password: req.body.password ? crypto.createHash('sha256').update(req.body.password).digest("base64") : ""
-        }
-        if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
-            return res.send({ message : "incorrect format user" })
-        }
-        clientModel.findOne({ email: currentUser.email, motDePasse: currentUser.password }).then(data => {
-            if (!data) {    
-                return res.send({ message : "user not found" })
-            }
-            return res.send(data)
-        })
+    fastify.post("/delete", (req, res) => {
+        deleteUser(req, res)
     })
 
-    fastify.post("/signout", (req, res) => {
-        const currentUser = {
-            email: req.body.email ? req.body.email : "",
-            password: req.body.password ? crypto.createHash('sha256').update(req.body.password).digest("base64") : ""
-        }
-        if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
-            return res.send({ message: "incorrect format user" })
-        }
-        clientModel.find({email:currentUser.email,password:currentUser.password}).then(data => {
-            if(data.length==0){
-                return res.send({ message : "user not found" })
-            }
-            clientModel.deleteOne({email:currentUser.email,password:currentUser.password}).then(data => {
-                return res.send({ message : "user deleted" })
-            })
-        })
-        
-    })
-
-    fastify.post("/forgetpswd", (req, res) => {
-        const body = req.body
-        res.send("/forgetpswd")
+    fastify.post("/forget-password", (req, res) => {
+        forgetPassword(req, res)
     })
 
     fastify.post("/trip", (req, res)=> {
-        const currentUser = {
-            email: req.body.email ? req.body.email : "",
-            password: req.body.password ? crypto.createHash('sha256').update(req.body.password).digest("base64") : ""
-        }
-        if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
-            return res.send({ message: "incorrect format user" })
-        }
-        clientModel.find({email:currentUser.email,password:currentUser.password}).then(data => {
-            if(data.length==0){
-                return res.send({ message : "user not found" })
-            }
-            console.log(data[0].id)
-            tripClientModel.find({client:data[0].id}).then(trip => {
-                if(trip.length==0){
-                    return res.send({ message : "no trip found" })
-                }
-                return res.send(trip)
-            })
-        })
+        getUserTrip(req, res)
     })
 
     done()

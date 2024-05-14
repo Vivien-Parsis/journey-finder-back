@@ -1,4 +1,4 @@
-const cleanJsonAiOutput = (output) => {
+const parseJsonAiOutput = (output) => {
     let start = 0; let end = 0
     for(let i = 0; i<output.length; i++){
         if(output[i]=="`"){
@@ -15,4 +15,4 @@ const cleanJsonAiOutput = (output) => {
     return output.substring(start, end).replaceAll("```json","").replaceAll("`","").trim()
 }
 
-module.exports = { cleanJsonAiOutput }
+module.exports = { parseJsonAiOutput }
