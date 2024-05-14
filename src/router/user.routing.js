@@ -1,4 +1,4 @@
-const { getUser, signUp, signIn, deleteUser, forgetPassword, getUserTrip } = require("../controller/user")
+const { getUser, signUp, signIn, deleteUser, forgetPassword, getUserTrip } = require("../controller/user.controller")
 
 module.exports = (fastify, _, done) => {
     // fastify.get("/get/:id?", (req, res)=>{

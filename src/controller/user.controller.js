@@ -1,7 +1,7 @@
 const crypto = require("node:crypto")
 const { clientModel, tripClientModel } = require("../config/db")
 const { default: mongoose } = require("mongoose")
-const { isValidEmail } = require("../controller/validator")
+const { isValidEmail } = require("../tools/validator")
 
 const signUp = (req, res) => {
     const currentUser = {

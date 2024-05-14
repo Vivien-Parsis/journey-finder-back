@@ -1,5 +1,5 @@
 const dotenv = require("dotenv")
-const { host, port } = require("./src/const/config")
+const { host, port } = require("./src/const/config.const")
 
 const fastify = require('fastify')({
     logger: {
@@ -32,8 +32,8 @@ fastify.get("/", (req, res) => {
     res.send("Journey Finder Back")
 })
 
-fastify.register(require("./src/router/user"), { prefix : "/user" })
-fastify.register(require("./src/router/ai"), { prefix : "/ai" })
+fastify.register(require("./src/router/user.routing"), { prefix : "/user" })
+fastify.register(require("./src/router/ai.routing"), { prefix : "/ai" })
 
 fastify.listen({host: host, port: port }, (err, address) => {
     if (err) throw err
