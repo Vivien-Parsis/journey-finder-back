@@ -1,5 +1,5 @@
 const dotenv = require("dotenv")
-const { apiKeyTogether } = require("../const/config.const")
+const { apiKeyTogether } = require("./config.const")
 const openai = require("openai")
 
 dotenv.config()

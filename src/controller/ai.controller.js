@@ -1,4 +1,4 @@
-const { aiModel, systemPrompt, AIClient } = require("../const/ai.const")
+const { aiModel, systemPrompt, AIClient } = require("../constant/ai.const")
 const { tripClientModel, clientModel } = require("../config/db")
 const { parseJsonAiOutput } = require("../tools/parse")
 
@@ -19,18 +19,19 @@ const createTripFromAi = (req, res) => {
 module.exports = { createTripFromAi }
 
 const createAiResponse = (req, res, user) => {
+    const message = [
+        {
+            "role": "system",
+            "content": systemPrompt
+        },{
+            "role": "user",
+            "content": `user preference:${user.preference}`
+        }
+    ]
     AIClient.chat.completions.create({ 
         model: aiModel,
         n:1,
-        messages : [
-            {
-                "role": "system",
-                "content": systemPrompt
-            },{
-                "role": "user",
-                "content": `user preference:${user.preference}`
-            }
-        ]
+        messages : message
     }).then(data => {
         if(!data.choices[0].message){
             return res.send({message:"error on AI API Call"})

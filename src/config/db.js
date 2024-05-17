@@ -1,5 +1,5 @@
 const { default: mongoose } = require("mongoose");
-const { db_url } = require("../const/config.const")
+const { db_url } = require("../constant/config.const")
 
 mongoose.connect(db_url)
         .then(() => console.log('Connecté avec succès à MongoDB'))

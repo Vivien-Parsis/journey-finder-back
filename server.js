@@ -1,5 +1,5 @@
 const dotenv = require("dotenv")
-const { host, port } = require("./src/const/config.const")
+const { host, port } = require("./src/constant/config.const")
 
 const fastify = require('fastify')({
     logger: {
