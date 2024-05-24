@@ -4,7 +4,7 @@
 
 ### se connecter
 
-POST `/user/signin`
+POST `/user/sign-in`
 
 ```json
 {
@@ -15,7 +15,7 @@ POST `/user/signin`
 
 ### S'inscrire
 
-POST `/user/signup`
+POST `/user/sign-up`
 
 ```json
 {
@@ -28,7 +28,7 @@ POST `/user/signup`
 
 ### supprimer son compte
 
-POST `/user/signout`
+POST `/user/delete`
 
 ```json
 {
