@@ -1,7 +1,7 @@
 const crypto = require("node:crypto")
 const { clientModel, tripClientModel } = require("../config/db")
 const { default: mongoose } = require("mongoose")
-const { isValidEmail } = require("../tools/validator")
+const { isValidEmail, isValidPassword } = require("../tools/validator")
 
 const signUp = (req, res) => {
     const currentUser = {
@@ -15,6 +15,9 @@ const signUp = (req, res) => {
     }
     if(!isValidEmail(currentUser.email)){
         return res.send({message:"invalid email format"})
+    }
+    if(!isValidPassword(req.body.password)){
+        return res.send({message:"invalid password format. Password must containt a least one number, one capital letter and one lowercase letter"})
     }
     clientModel.find({ email: currentUser.email }).then(users => {
         if (users.length != 0) {

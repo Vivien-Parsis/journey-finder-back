@@ -8,7 +8,11 @@ const isValidEmail = (email) => {
 }
 
 const isValidPassword = (password) => {
-    return true
+    return password.length >= 6 && password.length <= 30 //is the password length is between 6 to 30
+        && /[A-Z]/.test(password) //is the password contain at least one capital letter
+        && /[a-z]/.test(password) //is the password contain at least one lowercase letter
+        && /\d/.test(password) //is the password contain at least one number
+
 }
 
 module.exports = { isValidEmail, isValidPassword }
