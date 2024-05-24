@@ -36,7 +36,6 @@ const signIn = (req, res) => {
         return res.send({ message : "incorrect format user" })
     }
     clientModel.findOne({ email: currentUser.email, password: currentUser.password }).then(data => {
-        console.log(data)
         if (!data) {    
             return res.send({ message : "user not found" })
         }
@@ -85,7 +84,6 @@ const getUserTrip = (req, res) => {
         if(data.length==0){
             return res.send({ message : "user not found" })
         }
-        console.log(data[0].id)
         tripClientModel.find({client:data[0].id}).then(trip => {
             if(trip.length==0){
                 return res.send({ message : "no trip found" })
