@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+const { default: mongoose } = require("mongoose")
 const { db_url } = require("../constant/config.const")
 const { clientSchema, tripClientSchema } = require("./schema.db")
 
