@@ -1,5 +1,5 @@
 const { aiModel, systemPrompt, AIClient } = require("../constant/ai.const")
-const { tripClientModel, clientModel } = require("../config/db")
+const { tripClientModel, clientModel } = require("../database/model.db")
 const { parseJsonAiOutput } = require("../tools/parse")
 
 const createTripFromAi = (req, res) => {

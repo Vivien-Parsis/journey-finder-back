@@ -1,5 +1,5 @@
 const crypto = require("node:crypto")
-const { clientModel, tripClientModel } = require("../config/db")
+const { clientModel, tripClientModel } = require("../database/model.db")
 const { default: mongoose } = require("mongoose")
 const { isValidEmail, isValidPassword } = require("../tools/validator")
 

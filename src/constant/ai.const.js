@@ -8,6 +8,7 @@ const AIClient = new openai.OpenAI({
     apiKey: apiKeyTogether,
     baseURL: 'https://api.together.xyz/v1',
 })
+
 const aiModel = process.env.AI_MODEL ? process.env.AI_MODEL : "google/gemma-7b-it"
 const systemPrompt = "You will be provided with by user preference."
                     +"Your task is to generate trip from user preferences."
