@@ -10,6 +10,13 @@ const clientSchema = new mongoose.Schema({
         myBudget: { type: String, default: "Normal" },
         visitedCountries: { type: String, default: "Italy" },
         transportationMod: { type: String, default: "Train" },
+    },
+    destination: {
+        type: { type: String, default: "Mountains" },
+        continent: { type: String, default: "Europe" },
+        climate: { type: String, default: "Tempered" },
+        citySize: { type: String, default: "middle;small" },
+        activities: { type: String, default: "hiking" },
     }
 }, { versionKey: false })
 

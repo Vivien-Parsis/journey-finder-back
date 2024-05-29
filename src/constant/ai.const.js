@@ -30,4 +30,8 @@ const systemPrompt = "You will be provided with by user preference."
                         +"},...]}"
                     +"]"
 
-module.exports = { aiModel, systemPrompt, AIClient }
+module.exports = {
+    aiModel,
+    AIClient,
+    systemPrompt
+}

@@ -25,8 +25,8 @@ module.exports = (fastify, _, done) => {
         userController.newPassword(req, res)
     })
 
-    fastify.post("/new-about", (req, res) => {
-        userController.newAbout(req, res)
+    fastify.post("/new-preference", (req, res) => {
+        userController.newPreference(req, res)
     })
 
     fastify.post("/trip", (req, res)=> {

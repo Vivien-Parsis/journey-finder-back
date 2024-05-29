@@ -6,4 +6,9 @@ const host = ("RENDER" in process.env || process.env.ISDOCKER=="true") ? `0.0.0.
 const port = process.env.PORT ? process.env.PORT : 4000
 const apiKeyTogether = process.env.API_KEY_TOGETHER ? process.env.API_KEY_TOGETHER : ""
 
-module.exports = { db_url, host, port, apiKeyTogether }
+module.exports = {
+    host,
+    port,
+    db_url,
+    apiKeyTogether
+}

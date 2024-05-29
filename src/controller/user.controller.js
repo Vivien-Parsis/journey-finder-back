@@ -9,7 +9,8 @@ const signUp = (req, res) => {
         lastName : req.body.lastName ? req.body.lastName : "",
         email : req.body.email ? req.body.email : "",
         password : req.body.password ? crypto.createHash('sha256').update(req.body.password).digest("base64") : "",
-        about : {}
+        about : req.body.about ? req.body.about : {},
+        destination : req.body.destination ? req.body.destination : {},
     }
     if (currentUser.email.trim() == "" || currentUser.password.trim() == "" || currentUser.firstName.trim() == "" || currentUser.lastName.trim() == "") {
         return res.send({ message: "incorrect format user" })
@@ -20,19 +21,6 @@ const signUp = (req, res) => {
     if(!isValidPassword(req.body.password)){
         return res.send({message:"invalid password format. Password must containt a least one number, one capital letter and one lowercase letter"})
     }
-    if(req.body.about.myCountry){
-        currentUser.about.myCountry = req.body.about.myCountry
-    }
-    if(req.body.about.myBudget){
-        currentUser.about.myBudget = req.body.about.myBudget
-    }
-    if(req.body.about.visitedCountries){
-        currentUser.about.visitedCountries = req.body.about.visitedCountries
-    }
-    if(req.body.about.transportationMod){
-        currentUser.about.transportationMod = req.body.about.transportationMod
-    }
-
     clientModel.find({ email: currentUser.email }).then(users => {
         if (users.length != 0) {
             return res.send({ message : "already exist" })
@@ -135,32 +123,21 @@ const newPassword = (req, res) => {
     })
 }
 
-const newAbout = (req, res) => {
+const newPreference = (req, res) => {
     const currentUser = {
         email: req.body.email ? req.body.email : "",
         password: req.body.password ? crypto.createHash('sha256').update(req.body.password).digest("base64") : "",
-        about : {}
-    }
-    if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
-        return res.send({ message: "incorrect format user" })
-    }
-    if(req.body.about.myCountry){
-        currentUser.about.myCountry = req.body.about.myCountry
-    }
-    if(req.body.about.myBudget){
-        currentUser.about.myBudget = req.body.about.myBudget
-    }
-    if(req.body.about.visitedCountries){
-        currentUser.about.visitedCountries = req.body.about.visitedCountries
-    }
-    if(req.body.about.transportationMod){
-        currentUser.about.transportationMod = req.body.about.transportationMod
+        about : req.body.about ? req.body.about : {},
+        destination : req.body.destination ? req.body.destination : {},
     }
     clientModel.find({email:currentUser.email,password:currentUser.password}).then(data => {
         if(data.length==0){
             return res.send({ message : "user not found" })
         }
-        clientModel.findOneAndUpdate({email:currentUser.email,password:currentUser.password},{about : currentUser.about},{new:true}).then(response=>{
+        clientModel.findOneAndUpdate(
+            {email:currentUser.email,password:currentUser.password},
+            {about : currentUser.about, destination : currentUser.destination},
+            {new:true}).then(response=>{
             console.log(response)
             return res.send(response)
         })
@@ -175,10 +152,10 @@ const forgetPassword = (req, res) => {
 module.exports = { 
     signIn,
     signUp,
-    deleteUser,
-    forgetPassword,
     getUser,
+    deleteUser,
     getUserTrip,
     newPassword,
-    newAbout
+    newPreference,
+    forgetPassword
 }
