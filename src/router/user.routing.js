@@ -21,6 +21,14 @@ module.exports = (fastify, _, done) => {
         userController.forgetPassword(req, res)
     })
 
+    fastify.post("/new-password", (req, res) => {
+        userController.newPassword(req, res)
+    })
+
+    fastify.post("/new-about", (req, res) => {
+        userController.newAbout(req, res)
+    })
+
     fastify.post("/trip", (req, res)=> {
         userController.getUserTrip(req, res)
     })
