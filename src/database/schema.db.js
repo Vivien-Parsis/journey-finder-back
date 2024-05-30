@@ -1,10 +1,10 @@
 const { mongoose } = require("mongoose")
 
 const clientSchema = new mongoose.Schema({
-    lastName: { type: String, required: true },
-    firstName: { type: String, required: true },
-    email: { type: String, required: true, match:/[a-zA-Z0-9._\-]{1,30}[@][a-zA-Z0-9._\-]{4,12}[.]{1}[a-zA-Z]{2,4}/gm },
-    password: { type: String, required: true},
+    lastName: { type: String, required: true, trim:true },
+    firstName: { type: String, required: true, trim:true },
+    email: { type: String, required: true, minLength: 6, maxLength:30, trim:true, match:/[a-zA-Z0-9._\-]{1,30}[@][a-zA-Z0-9._\-]{4,12}[.]{1}[a-zA-Z]{2,4}/gm },
+    password: { type: String, required: true },
     about: {
         myCountry: { type: String, default: "France" },
         myBudget: { type: String, default: "Normal" },

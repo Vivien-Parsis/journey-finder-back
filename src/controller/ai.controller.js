@@ -1,19 +1,25 @@
+const crypto = require("node:crypto")
 const { aiModel, systemPrompt, AIClient } = require("../constant/ai.const")
 const { tripClientModel, clientModel } = require("../database/model.db")
 const { parseJsonAiOutput } = require("../tools/parse")
 
 const createTripFromAi = (req, res) => {
-    const user = {
-        clientId : req.body.clientid ? req.body.clientid : null,
-        preference : req.body.preference ? req.body.preference : "museum, cold temperature"
+    const currentUser = {
+        email: req.body.email ? req.body.email : "",
+        password: req.body.password ? crypto.createHash('sha256').update(req.body.password).digest("base64") : ""
     }
-
-    if(!user.clientId) return res.send({message:"missing clientid"})
-    
-    clientModel.findOne({ _id: user.clientId }).then(data => {
-        if(!data) return res.send({ message : "user not found" })
-            createAiResponse(req, res, user)
-        })
+    if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
+        return res.send({ message : "incorrect format user" })
+    }
+    clientModel.findOne({ email: currentUser.email, password: currentUser.password }).then(data => {
+        if (!data) {    
+            return res.send({ message : "user not found" })
+        }
+        currentUser.about = data.about
+        currentUser.destination = data.destination
+        currentUser.clientId = data.id
+        createAiResponse(req, res, currentUser)
+    })
 }
 
 module.exports = { createTripFromAi }
@@ -25,7 +31,7 @@ const createAiResponse = (req, res, user) => {
             "content": systemPrompt
         },{
             "role": "user",
-            "content": `user preference:${user.preference}`
+            "content": `about user:${user.about};destination:${user.destination}`
         }
     ]
     AIClient.chat.completions.create({ 

@@ -138,8 +138,7 @@ const newPreference = (req, res) => {
             {email:currentUser.email,password:currentUser.password},
             {about : currentUser.about, destination : currentUser.destination},
             {new:true}).then(response=>{
-            console.log(response)
-            return res.send(response)
+                return res.send(response)
         })
     })
 }
