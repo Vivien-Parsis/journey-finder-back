@@ -60,7 +60,7 @@ const deleteUser = (req, res) => {
         if(data.length==0){
             return res.send({ message : "user not found" })
         }
-        clientModel.deleteOne({email:currentUser.email,password:currentUser.password}).then(data => {
+        clientModel.deleteOne({email:currentUser.email,password:currentUser.password}).then(() => {
             return res.send({ message : "user deleted" })
         })
     })
@@ -77,26 +77,6 @@ const getUser = (req, res) => {
     )
 }
 
-const getUserTrip = (req, res) => {
-    const currentUser = {
-        email: req.body.email ? req.body.email : "",
-        password: req.body.password ? crypto.createHash('sha256').update(req.body.password).digest("base64") : ""
-    }
-    if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
-        return res.send({ message: "incorrect format user" })
-    }
-    clientModel.find({email:currentUser.email,password:currentUser.password}).then(data => {
-        if(data.length==0){
-            return res.send({ message : "user not found" })
-        }
-        tripClientModel.find({client:data[0].id}).then(trip => {
-            if(trip.length==0){
-                return res.send({ message : "no trip found" })
-            }
-            return res.send(trip)
-        })
-    })
-}
 
 const newPassword = (req, res) => {
     const currentUser = {
@@ -153,7 +133,6 @@ module.exports = {
     signUp,
     getUser,
     deleteUser,
-    getUserTrip,
     newPassword,
     newPreference,
     forgetPassword

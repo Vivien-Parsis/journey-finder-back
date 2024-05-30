@@ -11,8 +11,9 @@ fastify.get("/", (req, res) => {
     res.send("Journey Finder Back")
 })
 
-fastify.register(require("./src/router/user.routing"), { prefix : "/user" })
-fastify.register(require("./src/router/ai.routing"), { prefix : "/ai" })
+fastify.register(require("./src/router/user.routes"), { prefix : "/user" })
+fastify.register(require("./src/router/ai.routes"), { prefix : "/ai" })
+fastify.register(require("./src/router/trip.routes"), { prefix : "/trip" })
 
 fastify.listen({host: host, port: port }, (err, address) => {
     if (err) throw err

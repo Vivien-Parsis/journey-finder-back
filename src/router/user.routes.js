@@ -29,9 +29,5 @@ module.exports = (fastify, _, done) => {
         userController.newPreference(req, res)
     })
 
-    fastify.post("/trip", (req, res)=> {
-        userController.getUserTrip(req, res)
-    })
-
     done()
 } 
