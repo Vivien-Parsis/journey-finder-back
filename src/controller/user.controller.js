@@ -40,11 +40,11 @@ const signIn = (req, res) => {
     if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
         return res.send({ message : "incorrect format user" })
     }
-    clientModel.findOne({ email: currentUser.email, password: currentUser.password }).then(data => {
-        if (!data) {    
+    clientModel.findOne({ email: currentUser.email, password: currentUser.password }).then(client => {
+        if (!client) {    
             return res.send({ message : "user not found" })
         }
-        return res.send(data)
+        return res.send(client)
     })
 }
 
@@ -56,8 +56,8 @@ const deleteUser = (req, res) => {
     if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
         return res.send({ message: "incorrect format user" })
     }
-    clientModel.find({email:currentUser.email,password:currentUser.password}).then(data => {
-        if(data.length==0){
+    clientModel.findOne({email:currentUser.email,password:currentUser.password}).then(client => {
+        if(!client){
             return res.send({ message : "user not found" })
         }
         clientModel.deleteOne({email:currentUser.email,password:currentUser.password}).then(() => {
@@ -71,8 +71,8 @@ const getUser = (req, res) => {
     if(!mongoose.isValidObjectId(id) && id.trim()!=""){
         return res.send({message:"invalid id format"})
     }
-    clientModel.find(id ? {_id:id} : {}).then(data => {
-            return res.send(data)
+    clientModel.find(id ? {_id:id} : {}).then(client => {
+            return res.send(client)
         }
     )
 }

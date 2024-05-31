@@ -17,4 +17,5 @@ fastify.register(require("./src/router/trip.routes"), { prefix : "/trip" })
 
 fastify.listen({host: host, port: port }, (err, address) => {
     if (err) throw err
+    console.log(`server listen on ${address}`)
 })

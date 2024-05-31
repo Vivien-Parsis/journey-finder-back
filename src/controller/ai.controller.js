@@ -11,13 +11,13 @@ const createTripFromAi = (req, res) => {
     if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
         return res.send({ message : "incorrect format user" })
     }
-    clientModel.findOne({ email: currentUser.email, password: currentUser.password }).then(data => {
-        if (!data) {    
+    clientModel.findOne({ email: currentUser.email, password: currentUser.password }).then(client => {
+        if (!client) {    
             return res.send({ message : "user not found" })
         }
-        currentUser.about = data.about
-        currentUser.destination = data.destination
-        currentUser.clientId = data.id
+        currentUser.about = client.about
+        currentUser.destination = client.destination
+        currentUser.clientId = client.id
         createAiResponse(req, res, currentUser)
     })
 }

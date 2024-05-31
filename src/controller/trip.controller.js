@@ -9,11 +9,11 @@ const getUserTrip = (req, res) => {
     if (currentUser.email.trim() == "" || currentUser.password.trim() == "") {
         return res.send({ message: "missing email or/and password" })
     }
-    clientModel.find({email:currentUser.email,password:currentUser.password}).then(data => {
-        if(data.length==0){
+    clientModel.findOne({email:currentUser.email,password:currentUser.password}).then(client => {
+        if(!client){
             return res.send({ message : "user not found" })
         }
-        tripClientModel.find({client:data[0].id}).then(trip => {
+        tripClientModel.find({client:client.id}).then(trip => {
             if(trip.length==0){
                 return res.send({ message : "no trip found" })
             }
@@ -31,15 +31,15 @@ const deleteUserTrip = (req, res) => {
     if (currentUser.email.trim() == "" || currentUser.password.trim() == "" || currentUser.tripId.trim() == "") {
         return res.send({ message: "missing email or/and password or/and tripId" })
     }
-    clientModel.findOne({email:currentUser.email,password:currentUser.password}).then(data => {
-        if(!data){
+    clientModel.findOne({email:currentUser.email,password:currentUser.password}).then(client => {
+        if(!client){
             return res.send({ message : "user not found" })
         }
         tripClientModel.findOne({_id:currentUser.tripId}).then(trip => {
             if(!trip){
                 return res.send({ message : "no trip found" })
             }
-            if(trip.clientId != data.id){
+            if(trip.clientId != client.id){
                 return res.send({ message : "is trip it not yours" })
             }
             tripClientModel.deleteOne({_id:currentUser.tripId}).then(()=>{
