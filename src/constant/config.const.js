@@ -33,7 +33,8 @@ const cors = {
 }
 
 const rateLimit = {
-
+    max: 10,
+    timeWindow: 60000
 }
 
 module.exports = {
