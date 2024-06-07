@@ -10,6 +10,7 @@ const clientSchema = new mongoose.Schema({
         myBudget: { type: String, default: "Normal" },
         visitedCountries: { type: String, default: "Italy" },
         transportationMod: { type: String, default: "Train" },
+        otherInformation: { type: String, default: ""}
     },
     destination: {
         type: { type: String, default: "Mountains" },

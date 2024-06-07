@@ -1,16 +1,15 @@
 const dotenv = require("dotenv")
-const { apiKeyTogether } = require("./config.const")
 const openai = require("openai")
 
 dotenv.config()
 
 const AIClient = new openai.OpenAI({
-    apiKey: apiKeyTogether,
+    apiKey: require("./config.const").apiKeyTogether,
     baseURL: 'https://api.together.xyz/v1',
 })
 
 const aiModel = process.env.AI_MODEL ? process.env.AI_MODEL : "google/gemma-7b-it"
-const systemPrompt = "You will be provided with by user preference."
+const tripSystemPrompt = "You will be provided with by user preference."
                     +"Your task is to generate trip from user preferences."
                     +"Generate multiple place at least 5."
                     +"format your answer in valid JSON format like :"
@@ -34,5 +33,5 @@ const systemPrompt = "You will be provided with by user preference."
 module.exports = {
     aiModel,
     AIClient,
-    systemPrompt
+    tripSystemPrompt
 }
