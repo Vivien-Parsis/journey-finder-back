@@ -1,9 +1,9 @@
 const userController = require("../controller/user.controller")
 
 module.exports = (fastify, _, done) => {
-    fastify.get("/get/:id?", (req, res)=>{
-        userController.getUser(req, res)
-    })
+    //fastify.get("/get/:id?", (req, res)=>{
+    //    userController.getUser(req, res)
+    //})
 
     fastify.post("/sign-up", (req, res) => {
         userController.signUp(req, res)
